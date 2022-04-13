@@ -1,0 +1,104 @@
+# Example action that shows a workflow using the ORCA CLI tool as part of a pipeline.
+# This will build a container from a Dockerfile within a source repo.
+# Environment variables required:
+#    GITHUB_TOKEN: This is the token that you need to access the github container repository. It needs to be set as a secret within the environment section of the repo.
+#    ORCA_API_KEY: This is the API token from the ORCA platform that is needed to run the CLI tool. This also needs to be set within the environment section of the repository.
+#
+# In order for this action to work, it will need to be associated with a source repository that has a Dockerfile.
+# Also note that it is currently configured to be used on push to a specific branch.
+
+# Example
+name: Orca CLI example
+
+on:
+  push:
+    branches: ['dev']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+
+  lint-check:
+    name: lint-check
+    # we had issues with ubuntu, currently using MacOS
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Lint
+        run: echo "Your linting goes here..."
+
+  format-check:
+    name: format-check
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: format-check
+      run: echo "Your format checking goes here..."
+
+  unit-tests:
+    needs: [lint-check,format-check]
+    name: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Your Unit tests go here..."
+
+  debug-print-event-data:
+    name: debug-print-event-data
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Print event data for debug purposes
+      env:
+        EVENT: ${{ toJSON( github.event ) }}
+      run: echo "$EVENT"
+
+  build-and-scan-image:
+    needs: [unit-tests]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+  
+      - name: Run security scan
+        run: |
+          docker build --tag ${{ github.event.repository.name }} .
+          docker images
+          docker run -u 0 --rm -t -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/orcasecurity/orca-cli:latest -p default --api-token ${{ secrets.ORCA_API_KEY }} --format json image ${{ github.event.repository.name }}
+      #  continue-on-error: true  
+
+  push-to-registry:
+    needs: [build-and-scan-image]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Build and push Docker image
+        if: ${{ success() }}
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
