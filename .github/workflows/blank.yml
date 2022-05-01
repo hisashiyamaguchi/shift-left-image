@@ -27,7 +27,7 @@ jobs:
         # make sure results dir is created
         run: mkdir -p results-dir
       - name: run kics Scan
-        uses: checkmarx/kics-github-action@v1.3
+        uses: checkmarx/kics-github-action@v1.4
         with:
           path: 'iac_examples'
           output_path: results-dir
