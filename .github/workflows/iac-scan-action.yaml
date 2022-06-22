@@ -1,0 +1,22 @@
+name: IaC Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  iac-scan-job:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Orca IaC Security Scan
+      uses: orcasecurity/shiftleft-iac-action@v1
+      with:
+          api_token: ${{ secrets.ORCA_SECURITY_API_TOKEN }}
+          project_key: "default"
+          path: "iac_examples"
