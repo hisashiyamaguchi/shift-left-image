@@ -1,4 +1,4 @@
-name: IaC Scan
+name: IaC Scan Demo Pipeline
 
 on:
   push:
@@ -10,7 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  iac-scan-job:
+  orca-iac-scan-job:
+    name: IaC Security Scan
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,12 +20,4 @@ jobs:
       with:
           api_token: ${{ secrets.ORCA_SECURITY_API_TOKEN }}
           project_key: "default"
-          path: "iac_examples"
-          format: sarif
-          output: results/iac.sarif
-    - name: Upload SARIF file
-      if: ${{ always() }}
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        # Path to SARIF file relative to the root of the repository
-        sarif_file: results/iac.sarif
+          path: "iac"
