@@ -1,7 +1,6 @@
 name: Image Scan - Demo pipeline
 
-on:
-  workflow_dispatch:
+on: push
 
 jobs:
 
@@ -33,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       IMAGE_NAME: base_infra:latest
-      PROJECT_KEY: default
+      PROJECT_KEY: hisashiyamaguchi
       CLI_VERSION: latest
     steps:
     - name: Checkout
