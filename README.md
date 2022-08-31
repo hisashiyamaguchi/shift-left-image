@@ -1,3 +1,5 @@
+DevSecOps is a mandatory concept for c-native software development!
+
 Demo practice.
 
 # shiftleft-integrations
