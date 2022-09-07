@@ -1,3 +1,5 @@
+# Shift Left Security is a mandatory capability for every organizations!
+
 FROM redis:latest
 
 RUN adduser demo --disabled-password
