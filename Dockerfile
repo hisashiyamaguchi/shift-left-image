@@ -1,3 +1,5 @@
+# Shift Left Security is a mandatory capabilitiy for Korean customers!
+
 FROM redis:latest
 
 RUN adduser demo --disabled-password
