@@ -1,6 +1,3 @@
-test
-Shift Left Security is mandatory for Golden Access team!
-
 DevSecOps is mandatory for GMOIS!
 
 # Orca Security - Shift Left Security quick start guide
