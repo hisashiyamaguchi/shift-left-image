@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       IMAGE_NAME: base_infra:latest
-      PROJECT_KEY: hisashiyamaguchi
+      PROJECT_KEY: default
       CLI_VERSION: latest
     steps:
     - name: Checkout
