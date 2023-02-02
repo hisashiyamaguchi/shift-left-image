@@ -1,5 +1,3 @@
-SLS is a mandatory capability for MZ team!
-
 # Orca Security - Shift Left Security quick start guide
 Orca Security has a capability of DevSecOps - a concept & philosopy of the
 collaborative security improvement framework for the entire SDLS. The repo here
