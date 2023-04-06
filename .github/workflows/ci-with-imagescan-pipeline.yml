@@ -1,6 +1,6 @@
 name: Image Scan - Demo pipeline
 
-on: push
+on: fork
 
 jobs:
 
