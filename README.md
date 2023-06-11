@@ -1,4 +1,4 @@
- # Orca Security - Shift Left Security quick start guide
+# Orca Security - Shift Left Security quick start guide
 Orca Security has a capability of DevSecOps - a concept & philosopy of the
 collaborative security improvement framework for the entire SDLS. The repo here
 is a quick demo for your audiences.
